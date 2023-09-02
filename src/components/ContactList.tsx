@@ -1,18 +1,12 @@
 import styled from '@emotion/styled';
-import { Contact } from '../types/index';
+import { Contact } from '../types';
 import {
     SectionTitle as SectionTitleComponent,
     Text as TextComponent,
-} from '../elements/index';
+    Container,
+} from '../elements';
 
 import Card from '../components/ContactCard';
-
-const Container = styled.div({
-    padding: '16px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-});
 
 const SectionTitle = styled(SectionTitleComponent)({
     color: '#4a4b4c',
@@ -43,7 +37,9 @@ const ContactListComponent = (props: Props) => {
     } = props;
     return (
         <Container>
-            {type === 'favorite' && <SectionTitle>Favorite</SectionTitle>}
+            {type === 'favorite' && (
+                <SectionTitle>&#9733; Favorite</SectionTitle>
+            )}
             {!contactList || !contactList.length ? (
                 <Text>{emptyMessage}</Text>
             ) : (

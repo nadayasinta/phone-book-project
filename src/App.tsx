@@ -1,15 +1,18 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home';
-import Create from './pages/Create';
+import CreateContact from './pages/CreateContact';
+import UpdateContact from './pages/UpdateContact';
 import { ApolloProvider } from '@apollo/client';
 import client from './graphql/client';
 import styled from '@emotion/styled';
 
 const Page = styled.div({
-  height: '100%',
-  width: '100%',
+  height: '100vh',
   backgroundColor: '#f8f9fc',
   color: '#323232',
+  '*': {
+    boxSizing: 'border-box',
+  },
 });
 
 const router = createBrowserRouter([
@@ -19,7 +22,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/create',
-    element: <Create />,
+    element: <CreateContact />,
+  },
+  {
+    path: '/update/:id',
+    element: <UpdateContact />,
   },
 ]);
 
@@ -29,7 +36,6 @@ function App() {
       <ApolloProvider client={client}>
         <RouterProvider router={router} />
       </ApolloProvider>
-      ,
     </Page>
   );
 }

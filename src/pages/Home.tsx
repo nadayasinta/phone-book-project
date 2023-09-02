@@ -1,13 +1,16 @@
-import Headers from '../components/Header';
+import Headers from '../components/HeaderHome';
 import ContactList from '../components/ContactList';
-import { useQuery } from '@apollo/client';
-import { GetContacts, GetContact } from '../types/index';
+import { useQuery, useMutation } from '@apollo/client';
+import { GetContacts, GetContact } from '../types';
 import { GET_CONTACTS, GET_CONTACT } from '../graphql/query';
+import { DELETE_CONTACT } from '../graphql/mutation';
 import { useMemo, useState } from 'react';
-import { Divider } from '../elements/index';
+import { Divider } from '../elements';
+import { useNavigate } from 'react-router-dom';
 
 const limit = 10;
 const Home = () => {
+    const navigate = useNavigate();
     const [favoriteId, setFavoriteId] = useState<number>(5751);
     const [page, setPage] = useState<number>(0);
     const [searchValue, setSearchValue] = useState<string>('');
@@ -29,18 +32,31 @@ const Home = () => {
             },
         };
     }, [page, favoriteId, searchValue]);
-    const { data: contactList, loading: loadingContactList } =
-        useQuery<GetContacts>(GET_CONTACTS, { variables: contactListVariable });
-    const { data: favoriteContact, loading: loadingFavoriteContact } =
-        useQuery<GetContact>(GET_CONTACT, { variables: { id: favoriteId } });
+    const {
+        data: contactList,
+        loading: loadingContactList,
+        refetch: refetchContactList,
+    } = useQuery<GetContacts>(GET_CONTACTS, { variables: contactListVariable });
+    const {
+        data: favoriteContact,
+        loading: loadingFavoriteContact,
+        refetch: refetchFavoriteContact,
+    } = useQuery<GetContact>(GET_CONTACT, { variables: { id: favoriteId } });
+    const [deleteContact] = useMutation(DELETE_CONTACT);
 
     const handleFavoriteButton = (id: number) => {
         setFavoriteId(id === favoriteId ? 0 : id);
     };
 
-    const handleEditButton = (id: number) => { };
+    const handleEditButton = (id: number) => {
+        navigate(`/update/${id}`);
+    };
 
-    const handleDeleteButton = (id: number) => { };
+    const handleDeleteButton = async (id: number) => {
+        await deleteContact({ variables: { id } });
+        refetchContactList();
+        refetchFavoriteContact();
+    };
 
     return (
         <>
@@ -63,7 +79,7 @@ const Home = () => {
                         handleEditButton={handleEditButton}
                         handleDeleteButton={handleDeleteButton}
                     />
-                    <Divider></Divider>
+                    <Divider />
                 </>
             )}
             <ContactList
