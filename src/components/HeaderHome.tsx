@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState, Dispatch, SetStateAction, ChangeEventHandler } from 'react';
+import { useState, Dispatch, SetStateAction, ChangeEventHandler, useEffect } from 'react';
 import Header from './Header';
 import { Input as InputComponent, ButtonIcon, Title } from '../elements';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +24,12 @@ const HeaderComponent = (props: Props) => {
     const navigate = useNavigate();
     const { searchValue, setSearchValue } = props;
     const [isSearchVisible, setSearchVisible] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (searchValue) {
+            setSearchVisible(true);
+        }
+    }, [])
 
     const toggleSearch = () => {
         const newValue = !isSearchVisible;

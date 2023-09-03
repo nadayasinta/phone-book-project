@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { ReactNode } from 'react';
 
 export const HeaderContainer = styled.div({
     display: 'flex',
@@ -21,7 +22,7 @@ export const Header = styled.nav({
 });
 
 interface Props {
-    children?: React.ReactNode;
+    children?: ReactNode;
 }
 
 const HeaderComponent = (props: Props) => {

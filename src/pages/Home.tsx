@@ -5,18 +5,19 @@ import { useQuery, useMutation } from '@apollo/client';
 import { GetContacts, GetContact, GetTotalContact } from '../types';
 import { GET_CONTACTS, GET_CONTACT, GET_TOTAL_CONTACT } from '../graphql/query';
 import { DELETE_CONTACT } from '../graphql/mutation';
-import { useMemo, useState } from 'react';
+import { useMemo, } from 'react';
 import { Divider } from '../elements';
 import { useNavigate } from 'react-router-dom';
+import useLocalStorage from '../hooks/useLocalStorage'
 
 const initiaPage = 1;
 const limit = 10;
 
 const Home = () => {
     const navigate = useNavigate();
-    const [favoriteId, setFavoriteId] = useState<number>(5751);
-    const [page, setPage] = useState<number>(initiaPage);
-    const [searchValue, setSearchValue] = useState<string>('');
+    const [favoriteId, setFavoriteId] = useLocalStorage<number>('favoriteId', 0);
+    const [page, setPage] = useLocalStorage<number>('page', initiaPage);
+    const [searchValue, setSearchValue] = useLocalStorage<string>('searchValue', '');
 
     const contactListVariable = useMemo(() => {
         return {
