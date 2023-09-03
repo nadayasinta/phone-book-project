@@ -13,26 +13,28 @@ export const Avatar = styled.img((props) => ({
 }));
 
 export const Title = styled.h1({
-    fontSize: '20px',
+    fontSize: '22px',
     fontWeight: '700',
     margin: '0px',
 });
 
 export const SubTitle = styled.h2({
-    fontSize: '18px',
+    fontSize: '20px',
     fontWeight: '500',
     margin: '0px',
 });
 
 export const SectionTitle = styled.h4({
-    fontSize: '14px',
+    fontSize: '16px',
     fontWeight: '700',
     margin: '0px',
 });
 
 export const Text = styled.p({
-    fontSize: '14px',
+    fontSize: '16px',
     margin: '0px',
+    '&.disabled': { color: '#7c7d7e' },
+    '&.center': { textAlign: 'center' },
 });
 
 export const ButtonIcon = styled.button((props) => ({
@@ -61,6 +63,7 @@ export const ButtonIcon = styled.button((props) => ({
 export const Button = styled.button({
     fontSize: '16px',
     fontWeight: '700',
+    textTransform: 'uppercase',
     padding: '16px 12px',
     border: 'solid 2px black',
     background: 'none',
@@ -78,6 +81,7 @@ export const Divider = styled.hr({
 });
 
 export const Input = styled.input({
+    fontSize: '16px',
     border: 'solid 2px black',
     padding: '12px',
     '&:focus': {

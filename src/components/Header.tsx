@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
 import { ReactNode } from 'react';
 
-export const HeaderContainer = styled.div({
+const HeaderContainer = styled.div({
     display: 'flex',
     height: '75px',
     padding: '0px',
 });
 
-export const Header = styled.nav({
+const Header = styled.nav({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',

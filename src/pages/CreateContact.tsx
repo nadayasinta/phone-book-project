@@ -9,16 +9,14 @@ const CreateContact = () => {
     const [postContact] = useMutation(POST_CONTACT);
 
     const handleSave = async (values: ContactForm) => {
-        try {
-            const variables = {
-                ...values,
-                phones: values.phones.map((phone) => ({
-                    number: phone.number,
-                })),
-            };
-            await postContact({ variables });
-            navigate(-1);
-        } catch (error) { }
+        const variables = {
+            ...values,
+            phones: values.phones.map((phone) => ({
+                number: phone.number,
+            })),
+        };
+        await postContact({ variables });
+        navigate(-1);
     };
 
     return <FormContact handleSave={handleSave} />;

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Contact } from '../types';
 import {
     SectionTitle as SectionTitleComponent,
-    Text as TextComponent,
+    Text,
     Container,
 } from '../elements';
 
@@ -10,11 +10,6 @@ import Card from '../components/ContactCard';
 
 const SectionTitle = styled(SectionTitleComponent)({
     color: '#4a4b4c',
-});
-
-const Text = styled(TextComponent)({
-    textAlign: 'center',
-    color: '#7c7d7e',
 });
 
 interface Props {
@@ -43,7 +38,7 @@ const ContactListComponent = (props: Props) => {
                 <SectionTitle>&#9733; Favorite</SectionTitle>
             )}
             {!contactList || !contactList.length ? (
-                <Text>{emptyMessage}</Text>
+                <Text className='disabled center'>{emptyMessage}</Text>
             ) : (
                 contactList.map((contact: any) => (
                     <Card
