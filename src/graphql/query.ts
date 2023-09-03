@@ -51,3 +51,23 @@ export const GET_TOTAL_CONTACT = gql`
         }
     }
 `;
+
+export const GET_EXISTS_CONTACT = gql`
+    query GetExistsContact(
+        $first_name: String!
+        $last_name: String!
+        $id: [Int!] = []
+    ) {
+        contact_aggregate(
+            where: {
+                first_name: { _ilike: $first_name }
+                last_name: { _ilike: $last_name }
+                id: { _nin: $id }
+            }
+        ) {
+            aggregate {
+                count
+            }
+        }
+    }
+`;

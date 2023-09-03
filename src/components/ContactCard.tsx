@@ -17,6 +17,7 @@ const Card = styled.div({
     borderRadius: '16px',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
     gap: '20px',
     cursor: 'pointer',
     transition: 'background-color 0.3s ease, transform 0.3s ease',
@@ -32,13 +33,28 @@ const CardTitle = styled.div({
 });
 const CardDetail = styled.div((props) => ({
     display: props.hidden ? 'none' : 'flex',
+    '@media (min-width: 768px)': {
+        display: 'flex',
+    },
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100%',
+    borderWidth: 0,
+    borderStyle: 'solid',
+    borderColor: 'rgba(0, 0, 0, 0.2)',
+    borderTop: 'thin',
+}));
+
+const CardDescription = styled.div({
+    display: 'flex',
     flexDirection: 'column',
     gap: '8px',
-}));
+});
+
 const CardAction = styled.div({
     display: 'flex',
     justifyContent: 'space-around',
-    marginTop: '16px',
+    marginTop: '32px',
 });
 
 interface Props {
@@ -64,7 +80,7 @@ const ContactCardComponent = (props: Props) => {
     };
 
     return (
-        <Card onClick={toggleDetails}>
+        <Card onClick={toggleDetails} className='card'>
             <CardTitle>
                 <Avatar
                     src={`https://api.dicebear.com/7.x/micah/svg?seed=${data.last_name}&radius=50&backgroundType=gradientLinear,solid&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
@@ -75,37 +91,33 @@ const ContactCardComponent = (props: Props) => {
                     {data.first_name} {data.last_name}
                 </SubTitle>
             </CardTitle>
-            {
-                <CardDetail hidden={!expanded}>
+            <CardDetail hidden={!expanded}>
+                <CardDescription>
                     {data.phones.map((phone) => (
                         <Text key={phone.number}>{phone.number}</Text>
                     ))}
-                    <CardAction>
-                        <ButtonIcon
-                            className='border'
-                            onClick={() => handleFavoriteButton(data.id)}
-                        >
-                            {isFavorite ? (
-                                <FilledStarIcon />
-                            ) : (
-                                <OutlineStarIcon />
-                            )}
-                        </ButtonIcon>
-                        <ButtonIcon
-                            className='border'
-                            onClick={() => handleEditButton(data.id)}
-                        >
-                            <EditIcon />
-                        </ButtonIcon>
-                        <ButtonIcon
-                            className='border'
-                            onClick={() => handleDeleteButton(data.id)}
-                        >
-                            <DeleteIcon />
-                        </ButtonIcon>
-                    </CardAction>
-                </CardDetail>
-            }
+                </CardDescription>
+                <CardAction>
+                    <ButtonIcon
+                        className='border'
+                        onClick={() => handleFavoriteButton(data.id)}
+                    >
+                        {isFavorite ? <FilledStarIcon /> : <OutlineStarIcon />}
+                    </ButtonIcon>
+                    <ButtonIcon
+                        className='border'
+                        onClick={() => handleEditButton(data.id)}
+                    >
+                        <EditIcon />
+                    </ButtonIcon>
+                    <ButtonIcon
+                        className='border'
+                        onClick={() => handleDeleteButton(data.id)}
+                    >
+                        <DeleteIcon />
+                    </ButtonIcon>
+                </CardAction>
+            </CardDetail>
         </Card>
     );
 };

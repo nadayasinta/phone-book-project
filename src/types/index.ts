@@ -28,7 +28,7 @@ export interface GetContact {
     contact_by_pk: Contact;
 }
 
-export interface GetTotalContact {
+export interface GetCountContact {
     contact_aggregate: {
         aggregate: {
             count: number;

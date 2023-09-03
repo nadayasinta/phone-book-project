@@ -1,12 +1,5 @@
 import styled from '@emotion/styled';
 
-export const Container = styled.div({
-    padding: '16px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '16px',
-});
-
 export const Avatar = styled.img((props) => ({
     width: props.sizes,
     height: props.sizes,
@@ -28,6 +21,7 @@ export const SectionTitle = styled.h4({
     fontSize: '16px',
     fontWeight: '700',
     margin: '0px',
+    color: '#4a4b4c',
 });
 
 export const Text = styled.p({

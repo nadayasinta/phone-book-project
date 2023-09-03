@@ -1,30 +1,29 @@
 import styled from '@emotion/styled';
-import { useState, ChangeEventHandler, ChangeEvent, useEffect, useMemo } from 'react';
-import { CancelIcon, ErrorIcon } from '../icons';
 import {
-    Container as ContainerComponent,
-    Text,
-    Avatar as AvatarComponent,
-    Input,
-    Button,
-    ButtonIcon,
-    Title,
-} from '../elements';
-import { ContactForm, Contact } from '../types';
+    useState,
+    ChangeEventHandler,
+    ChangeEvent,
+    useEffect,
+    useMemo,
+} from 'react';
+import { CancelIcon, ErrorIcon, Loading } from '../icons';
+import { Text, Avatar, Input, Button, ButtonIcon, Title } from '../elements';
+import { ContactForm, Contact, GetCountContact } from '../types';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { GetContacts } from '../types';
-import { GET_CONTACTS } from '../graphql/query';
+import { GET_EXISTS_CONTACT } from '../graphql/query';
 
-const Container = styled(ContainerComponent)({
+const Container = styled.div({
+    padding: '16px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
     maxWidth: '500px',
     margin: 'auto',
-    gap: '20px',
-});
-
-const Avatar = styled(AvatarComponent)({
-    margin: '0 auto 16px',
+    '.avatar': {
+        margin: '0 auto 16px',
+    },
 });
 
 const InputNumber = styled(Input)({
@@ -41,7 +40,7 @@ const ActionRow = styled.div({
     alignItems: 'center',
     justifyContent: 'space-around',
     gap: '16px',
-    marginBottom: '60px',
+    marginBottom: '20px',
 });
 
 const AddButton = styled.p({
@@ -61,13 +60,18 @@ const ErrorRow = styled.div({
     ' svg': { color: '#7A0404', fontSize: '32px', minWidth: '32px' },
 });
 
+const LoadingContainer = styled.div({
+    textAlign: 'center',
+});
+
 interface Props {
     intialValues?: Contact;
     handleSave: (values: ContactForm) => void;
+    loading?: boolean;
 }
 
 const FormContact = (props: Props) => {
-    const { intialValues, handleSave } = props;
+    const { intialValues, handleSave, loading } = props;
     const navigate = useNavigate();
     const [values, setValues] = useState<ContactForm>({
         first_name: '',
@@ -75,19 +79,18 @@ const FormContact = (props: Props) => {
         phones: [],
     });
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const [getContactWithSameName] = useLazyQuery<GetContacts>(GET_CONTACTS, {
-        variables: {
-            where: {
-                first_name: { _ilike: values.first_name },
-                last_name: { _ilike: values.last_name },
-                ...(intialValues && { id: { _neq: intialValues.id } }),
-            },
-        },
-    });
+    const [getContactWithSameName] = useLazyQuery<GetCountContact>(
+        GET_EXISTS_CONTACT,
+        { fetchPolicy: 'no-cache' }
+    );
 
     const disabledSaveButton: boolean = useMemo(() => {
-        return !(values.first_name && values.last_name && values.phones.every(phone => phone.number))
-    }, [values])
+        return !(
+            values.first_name &&
+            values.last_name &&
+            values.phones.every((phone) => phone.number)
+        );
+    }, [values]);
 
     useEffect(() => {
         if (intialValues) {
@@ -140,13 +143,18 @@ const FormContact = (props: Props) => {
 
     const handleSaveButton = async () => {
         try {
-            const contactWithSameName = await getContactWithSameName();
-            console.log(contactWithSameName);
-            if (contactWithSameName?.data?.contact.length) {
+            const contactWithSameName = await getContactWithSameName({
+                variables: {
+                    first_name: values.first_name,
+                    last_name: values.last_name,
+                    ...(intialValues && { id: intialValues.id }),
+                },
+            });
+            if (contactWithSameName?.data?.contact_aggregate.aggregate.count) {
                 setErrorMessage('Contact name already exists');
                 return;
             }
-            await handleSave(values);
+            handleSave(values);
         } catch (error) {
             setErrorMessage('Something went wrong. Please try again later.');
         }
@@ -159,55 +167,69 @@ const FormContact = (props: Props) => {
                     {intialValues ? 'Edit Contact' : 'Create Contact'}
                 </Title>
             </Header>
-            <Container>
-                <Avatar
-                    src={`https://api.dicebear.com/7.x/micah/svg?seed=${intialValues?.last_name || 'user'
-                        }&radius=50&backgroundType=gradientLinear,solid&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
-                    alt='avatar'
-                    sizes='80px'
-                ></Avatar>
-                <Text>First Name</Text>
-                <Input
-                    value={values.first_name}
-                    name='first_name'
-                    onChange={handleChange}
-                />
-                <Text>Last Name</Text>
-                <Input
-                    value={values.last_name}
-                    name='last_name'
-                    onChange={handleChange}
-                />
-                <Text>Phone</Text>
-                {values.phones.map((phone, index) => (
-                    <NumberRow key={index}>
-                        <InputNumber
-                            value={phone.number}
-                            name='number'
-                            onChange={(event) =>
-                                handleChangeNumber(event, index)
-                            }
-                        />
-                        <ButtonIcon onClick={() => handleDeleteNumber(index)}>
-                            <CancelIcon />
-                        </ButtonIcon>
-                    </NumberRow>
-                ))}
-                <AddButton onClick={handleAddNumber}>
-                    <b>+</b> Add New
-                </AddButton>
-                <ErrorRow>
-                    {errorMessage && (
-                        <>
-                            <ErrorIcon /> <Text>{errorMessage}</Text>
-                        </>
-                    )}
-                </ErrorRow>
-                <ActionRow>
-                    <Button onClick={() => navigate(-1)}>Cancel</Button>
-                    <Button onClick={handleSaveButton} disabled={disabledSaveButton}>Save</Button>
-                </ActionRow>
-            </Container>
+            {loading ? (
+                <LoadingContainer>
+                    <Loading />
+                </LoadingContainer>
+            ) : (
+                <Container>
+                    <Avatar
+                        src={`https://api.dicebear.com/7.x/micah/svg?seed=${intialValues?.last_name || 'user'
+                            }&radius=50&backgroundType=gradientLinear,solid&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}
+                        alt='avatar'
+                        sizes='80px'
+                        className='avatar'
+                    ></Avatar>
+                    <Text>First Name</Text>
+                    <Input
+                        value={values.first_name}
+                        name='first_name'
+                        onChange={handleChange}
+                    />
+                    <Text>Last Name</Text>
+                    <Input
+                        value={values.last_name}
+                        name='last_name'
+                        onChange={handleChange}
+                    />
+                    <Text>Phone</Text>
+                    {values.phones.map((phone, index) => (
+                        <NumberRow key={index}>
+                            <InputNumber
+                                value={phone.number}
+                                name='number'
+                                onChange={(event) =>
+                                    handleChangeNumber(event, index)
+                                }
+                            />
+                            <ButtonIcon
+                                onClick={() => handleDeleteNumber(index)}
+                            >
+                                <CancelIcon />
+                            </ButtonIcon>
+                        </NumberRow>
+                    ))}
+                    <AddButton onClick={handleAddNumber}>
+                        <b>+</b> Add New
+                    </AddButton>
+                    <ErrorRow>
+                        {errorMessage && (
+                            <>
+                                <ErrorIcon /> <Text>{errorMessage}</Text>
+                            </>
+                        )}
+                    </ErrorRow>
+                    <ActionRow>
+                        <Button onClick={() => navigate(-1)}>Cancel</Button>
+                        <Button
+                            onClick={handleSaveButton}
+                            disabled={disabledSaveButton}
+                        >
+                            Save
+                        </Button>
+                    </ActionRow>
+                </Container>
+            )}
         </>
     );
 };

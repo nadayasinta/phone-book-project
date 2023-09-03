@@ -1,5 +1,11 @@
 import styled from '@emotion/styled';
-import { useState, Dispatch, SetStateAction, ChangeEventHandler, useEffect } from 'react';
+import {
+    useState,
+    Dispatch,
+    SetStateAction,
+    ChangeEventHandler,
+    useEffect,
+} from 'react';
 import Header from './Header';
 import { Input as InputComponent, ButtonIcon, Title } from '../elements';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +35,7 @@ const HeaderComponent = (props: Props) => {
         if (searchValue) {
             setSearchVisible(true);
         }
-    }, [])
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const toggleSearch = () => {
         const newValue = !isSearchVisible;

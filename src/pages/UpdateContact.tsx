@@ -3,16 +3,21 @@ import FormContact from '../components/FormContact';
 import { PUT_CONTACT } from '../graphql/mutation';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GetContact } from '../types';
-import { GET_CONTACT } from '../graphql/query';
+import { GET_CONTACT, GET_CONTACTS } from '../graphql/query';
 import { useQuery, useMutation } from '@apollo/client';
 
 const UpdateContact = () => {
     let { id } = useParams();
     const navigate = useNavigate();
-    const { data } = useQuery<GetContact>(GET_CONTACT, { variables: { id } });
-    const [putContact] = useMutation(PUT_CONTACT);
+    const { data, loading } = useQuery<GetContact>(GET_CONTACT, {
+        variables: { id: id && parseInt(id) ? parseInt(id) : 0 },
+    });
+    const [putContact] = useMutation(PUT_CONTACT, {
+        refetchQueries: [GET_CONTACTS],
+        onCompleted: () => navigate(-1),
+    });
 
-    const handleSave = async (values: ContactForm) => {
+    const handleSave = (values: ContactForm) => {
         if (!data?.contact_by_pk) return;
         const id = data.contact_by_pk.id;
         const deleted_phones_id: number[] = data.contact_by_pk.phones.reduce(
@@ -39,14 +44,14 @@ const UpdateContact = () => {
             deleted_phones_id,
         };
 
-        await putContact({ variables });
-        navigate(-1);
+        putContact({ variables });
     };
 
     return (
         <FormContact
             intialValues={data?.contact_by_pk}
             handleSave={handleSave}
+            loading={loading}
         />
     );
 };

@@ -1,15 +1,34 @@
 import styled from '@emotion/styled';
 import { Contact } from '../types';
-import {
-    SectionTitle as SectionTitleComponent,
-    Text,
-    Container,
-} from '../elements';
-
+import { SectionTitle, Text } from '../elements';
+import { Loading } from '../icons';
 import Card from '../components/ContactCard';
 
-const SectionTitle = styled(SectionTitleComponent)({
-    color: '#4a4b4c',
+const Container = styled.div({
+    flexDirection: 'row',
+    padding: '16px',
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '16px',
+    maxWidth: '1500px',
+    margin: 'auto',
+    '.text': {
+        flexGrow: 1,
+        width: '100%',
+    },
+    ' svg': { margin: 'auto' },
+    '.card': {
+        flexGrow: 1,
+        width: '100%',
+        '@media (min-width: 768px)': {
+            flexBasis: 'calc(50% - 32px)',
+            maxWidth: 'calc((100% - 16px)/2)',
+        },
+        '@media (min-width: 1024px)': {
+            flexBasis: 'calc(33.33% - 32px)',
+            maxWidth: 'calc((100% - 16px)/3)',
+        },
+    },
 });
 
 interface Props {
@@ -35,10 +54,12 @@ const ContactListComponent = (props: Props) => {
     return (
         <Container>
             {type === 'favorite' && (
-                <SectionTitle>&#9733; Favorite</SectionTitle>
+                <SectionTitle className='text'>&#9733; Favorite</SectionTitle>
             )}
-            {!contactList || !contactList.length ? (
-                <Text className='disabled center'>{emptyMessage}</Text>
+            {loading ? (
+                <Loading />
+            ) : !contactList || !contactList.length ? (
+                <Text className='text disabled center'>{emptyMessage}</Text>
             ) : (
                 contactList.map((contact: any) => (
                     <Card

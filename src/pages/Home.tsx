@@ -2,22 +2,28 @@ import Headers from '../components/HeaderHome';
 import Pagination from '../components/Pagination';
 import ContactList from '../components/ContactList';
 import { useQuery, useMutation } from '@apollo/client';
-import { GetContacts, GetContact, GetTotalContact } from '../types';
+import { GetContacts, GetContact, GetCountContact } from '../types';
 import { GET_CONTACTS, GET_CONTACT, GET_TOTAL_CONTACT } from '../graphql/query';
 import { DELETE_CONTACT } from '../graphql/mutation';
-import { useMemo, } from 'react';
+import { useMemo } from 'react';
 import { Divider } from '../elements';
 import { useNavigate } from 'react-router-dom';
-import useLocalStorage from '../hooks/useLocalStorage'
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const initiaPage = 1;
 const limit = 10;
 
 const Home = () => {
     const navigate = useNavigate();
-    const [favoriteId, setFavoriteId] = useLocalStorage<number>('favoriteId', 0);
+    const [favoriteId, setFavoriteId] = useLocalStorage<number>(
+        'favoriteId',
+        0
+    );
     const [page, setPage] = useLocalStorage<number>('page', initiaPage);
-    const [searchValue, setSearchValue] = useLocalStorage<string>('searchValue', '');
+    const [searchValue, setSearchValue] = useLocalStorage<string>(
+        'searchValue',
+        ''
+    );
 
     const contactListVariable = useMemo(() => {
         return {
@@ -39,18 +45,14 @@ const Home = () => {
         };
     }, [page, favoriteId, searchValue]);
 
-    const {
-        data: contactList,
-        loading: loadingContactList,
-        refetch: refetchContactList,
-    } = useQuery<GetContacts>(GET_CONTACTS, { variables: contactListVariable });
-    const {
-        data: favoriteContact,
-        loading: loadingFavoriteContact,
-        refetch: refetchFavoriteContact,
-    } = useQuery<GetContact>(GET_CONTACT, { variables: { id: favoriteId } });
-    const { data: totalContact } = useQuery<GetTotalContact>(GET_TOTAL_CONTACT);
-    const [deleteContact] = useMutation(DELETE_CONTACT);
+    const { data: contactList, loading: loadingContactList } =
+        useQuery<GetContacts>(GET_CONTACTS, { variables: contactListVariable });
+    const { data: favoriteContact, loading: loadingFavoriteContact } =
+        useQuery<GetContact>(GET_CONTACT, { variables: { id: favoriteId } });
+    const { data: totalContact } = useQuery<GetCountContact>(GET_TOTAL_CONTACT);
+    const [deleteContact] = useMutation(DELETE_CONTACT, {
+        refetchQueries: [GET_CONTACTS, GET_TOTAL_CONTACT],
+    });
 
     const lastPage: number = useMemo(() => {
         if (!totalContact?.contact_aggregate.aggregate.count) return initiaPage;
@@ -67,10 +69,8 @@ const Home = () => {
         navigate(`/update/${id}`);
     };
 
-    const handleDeleteButton = async (id: number) => {
-        await deleteContact({ variables: { id } });
-        refetchContactList();
-        refetchFavoriteContact();
+    const handleDeleteButton = (id: number) => {
+        deleteContact({ variables: { id } });
     };
 
     return (

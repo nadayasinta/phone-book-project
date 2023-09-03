@@ -19,6 +19,7 @@ const Header = styled.nav({
     width: '100%',
     height: '75px',
     gap: '8px',
+    zIndex: 1,
 });
 
 interface Props {
