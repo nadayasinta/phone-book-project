@@ -22,6 +22,7 @@ interface Props {
     emptyMessage: string;
     loading: boolean;
     contactList?: Contact[];
+    favoriteContactId: number;
     handleFavoriteButton: (id: number) => void;
     handleEditButton: (id: number) => void;
     handleDeleteButton: (id: number) => void;
@@ -33,6 +34,7 @@ const ContactListComponent = (props: Props) => {
         loading,
         emptyMessage,
         contactList = [],
+        favoriteContactId,
         ...cardAction
     } = props;
     return (
@@ -47,7 +49,7 @@ const ContactListComponent = (props: Props) => {
                     <Card
                         key={contact.id}
                         data={contact}
-                        isFavorite={type === 'favorite'}
+                        isFavorite={contact.id === favoriteContactId}
                         {...cardAction}
                     />
                 ))

@@ -35,24 +35,33 @@ export const Text = styled.p({
     margin: '0px',
 });
 
-export const ButtonIcon = styled.button({
-    fontSize: '18px',
+export const ButtonIcon = styled.button((props) => ({
+    background: 'none',
+    cursor: 'pointer',
     fontWeight: '500',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
+    border: 'none',
+    padding: '8px 5px 0',
+    fontSize: '28px',
     ' &svg': {
         margin: 'auto',
     },
-    border: 'solid 2px black',
-    background: 'none',
-    cursor: 'pointer',
-});
+    '&.border': {
+        borderRadius: '50%',
+        border: 'solid 2px black',
+        fontSize: '18px',
+        width: '40px',
+        height: '40px',
+        padding: '5px 5px 0',
+    },
+    ...(props.disabled && {
+        color: '#a3a3a4',
+    }),
+}));
 
 export const Button = styled.button({
     fontSize: '16px',
-    fontWeight: '500',
-    padding: '12px',
+    fontWeight: '700',
+    padding: '16px 12px',
     border: 'solid 2px black',
     background: 'none',
     cursor: 'pointer',
@@ -70,7 +79,7 @@ export const Divider = styled.hr({
 
 export const Input = styled.input({
     border: 'solid 2px black',
-    padding: '8px 12px',
+    padding: '12px',
     '&:focus': {
         outline: 'none',
     },

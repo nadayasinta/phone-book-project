@@ -7,8 +7,9 @@ import client from './graphql/client';
 import styled from '@emotion/styled';
 
 const Page = styled.div({
-  height: '100vh',
-  backgroundColor: '#f8f9fc',
+  minHeight: '100vh',
+  height: '100%',
+  backgroundColor: '#F2F4F9',
   color: '#323232',
   '*': {
     boxSizing: 'border-box',

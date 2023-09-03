@@ -1,37 +1,43 @@
 import Headers from '../components/HeaderHome';
+import Pagination from '../components/Pagination';
 import ContactList from '../components/ContactList';
 import { useQuery, useMutation } from '@apollo/client';
-import { GetContacts, GetContact } from '../types';
-import { GET_CONTACTS, GET_CONTACT } from '../graphql/query';
+import { GetContacts, GetContact, GetTotalContact } from '../types';
+import { GET_CONTACTS, GET_CONTACT, GET_TOTAL_CONTACT } from '../graphql/query';
 import { DELETE_CONTACT } from '../graphql/mutation';
 import { useMemo, useState } from 'react';
 import { Divider } from '../elements';
 import { useNavigate } from 'react-router-dom';
 
+const initiaPage = 1;
 const limit = 10;
+
 const Home = () => {
     const navigate = useNavigate();
     const [favoriteId, setFavoriteId] = useState<number>(5751);
-    const [page, setPage] = useState<number>(0);
+    const [page, setPage] = useState<number>(initiaPage);
     const [searchValue, setSearchValue] = useState<string>('');
+
     const contactListVariable = useMemo(() => {
         return {
-            limit,
-            offset: page * limit,
             order_by: [{ first_name: 'asc' }],
-            where: {
-                _and: [
-                    ...(searchValue ? [{}] : [{ id: { _neq: favoriteId } }]),
-                    {
+            ...(searchValue
+                ? {
+                    where: {
                         _or: [
                             { first_name: { _ilike: `%${searchValue}%` } },
                             { last_name: { _ilike: `%${searchValue}%` } },
                         ],
                     },
-                ],
-            },
+                }
+                : {
+                    limit,
+                    offset: (page - 1) * limit,
+                    where: { id: { _neq: favoriteId } },
+                }),
         };
     }, [page, favoriteId, searchValue]);
+
     const {
         data: contactList,
         loading: loadingContactList,
@@ -42,7 +48,15 @@ const Home = () => {
         loading: loadingFavoriteContact,
         refetch: refetchFavoriteContact,
     } = useQuery<GetContact>(GET_CONTACT, { variables: { id: favoriteId } });
+    const { data: totalContact } = useQuery<GetTotalContact>(GET_TOTAL_CONTACT);
     const [deleteContact] = useMutation(DELETE_CONTACT);
+
+    const lastPage: number = useMemo(() => {
+        if (!totalContact?.contact_aggregate.aggregate.count) return initiaPage;
+        return Math.ceil(
+            totalContact.contact_aggregate.aggregate.count / limit
+        );
+    }, [totalContact]);
 
     const handleFavoriteButton = (id: number) => {
         setFavoriteId(id === favoriteId ? 0 : id);
@@ -64,7 +78,7 @@ const Home = () => {
                 searchValue={searchValue}
                 setSearchValue={setSearchValue}
             />
-            {!searchValue && page === 0 && (
+            {!searchValue && page === initiaPage && (
                 <>
                     <ContactList
                         type='favorite'
@@ -75,6 +89,7 @@ const Home = () => {
                                 ? [favoriteContact?.contact_by_pk]
                                 : []
                         }
+                        favoriteContactId={favoriteId}
                         handleFavoriteButton={handleFavoriteButton}
                         handleEditButton={handleEditButton}
                         handleDeleteButton={handleDeleteButton}
@@ -87,10 +102,19 @@ const Home = () => {
                 emptyMessage='Your contact list is empty'
                 loading={loadingFavoriteContact}
                 contactList={contactList?.contact}
+                favoriteContactId={favoriteId}
                 handleFavoriteButton={handleFavoriteButton}
                 handleEditButton={handleEditButton}
                 handleDeleteButton={handleDeleteButton}
             />
+            {!searchValue && lastPage > initiaPage && (
+                <Pagination
+                    currentPage={page}
+                    firstPage={initiaPage}
+                    lastPage={lastPage}
+                    setPage={setPage}
+                />
+            )}
         </>
     );
 };

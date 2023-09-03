@@ -27,3 +27,11 @@ export interface GetContacts {
 export interface GetContact {
     contact_by_pk: Contact;
 }
+
+export interface GetTotalContact {
+    contact_aggregate: {
+        aggregate: {
+            count: number;
+        };
+    };
+}

@@ -1,11 +1,14 @@
 import styled from '@emotion/styled';
 import { useState, ChangeEventHandler, ChangeEvent, useEffect } from 'react';
+import { CancelIcon } from '../icons';
 import {
     Container as ContainerComponent,
     Text,
     Avatar as AvatarComponent,
     Input,
     Button,
+    ButtonIcon,
+    Title,
 } from '../elements';
 import { ContactForm, Contact } from '../types';
 import Header from './Header';
@@ -18,13 +21,6 @@ const Container = styled(ContainerComponent)({
 
 const Avatar = styled(AvatarComponent)({
     margin: '0 auto 16px',
-});
-
-const ButtonDelete = styled.button({
-    fontSize: '22px',
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
 });
 
 const InputNumber = styled(Input)({
@@ -41,7 +37,7 @@ const ActionRow = styled.div({
     alignItems: 'center',
     justifyContent: 'space-around',
     gap: '16px',
-    margin: '16px 0',
+    margin: '60px 0',
 });
 
 const AddButton = styled.p({
@@ -111,7 +107,11 @@ const FormContact = (props: Props) => {
 
     return (
         <>
-            <Header title={intialValues ? 'Edit Contact' : 'Create Contact'} />
+            <Header>
+                <Title>
+                    {intialValues ? 'Edit Contact' : 'Create Contact'}
+                </Title>{' '}
+            </Header>
             <Container>
                 <Avatar
                     src={`https://api.dicebear.com/7.x/micah/svg?seed=${intialValues?.last_name || 'user'
@@ -141,19 +141,12 @@ const FormContact = (props: Props) => {
                                 handleChangeNumber(event, index)
                             }
                         />
-                        <ButtonDelete onClick={() => handleDeleteNumber(index)}>
-                            <svg
-                                xmlns='http://www.w3.org/2000/svg'
-                                height='1em'
-                                viewBox='0 0 384 512'
-                            >
-                                <path d='M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z' />
-                            </svg>
-                        </ButtonDelete>
+                        <ButtonIcon onClick={() => handleDeleteNumber(index)}>
+                            <CancelIcon />
+                        </ButtonIcon>
                     </NumberRow>
                 ))}
                 <AddButton onClick={handleAddNumber}>
-                    {' '}
                     <b>+</b> Add New
                 </AddButton>
                 <ActionRow>

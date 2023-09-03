@@ -41,3 +41,13 @@ export const GET_CONTACT = gql`
         }
     }
 `;
+
+export const GET_TOTAL_CONTACT = gql`
+    query GetTotalContact {
+        contact_aggregate {
+            aggregate {
+                count
+            }
+        }
+    }
+`;
