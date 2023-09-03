@@ -56,11 +56,11 @@ export const ButtonIcon = styled.button((props) => ({
         padding: '5px 5px 0',
     },
     ...(props.disabled && {
-        color: '#a3a3a4',
+        color: '#7c7d7e',
     }),
 }));
 
-export const Button = styled.button({
+export const Button = styled.button((props) => ({
     fontSize: '16px',
     fontWeight: '700',
     textTransform: 'uppercase',
@@ -69,7 +69,11 @@ export const Button = styled.button({
     background: 'none',
     cursor: 'pointer',
     width: '100%',
-});
+    ...(props.disabled && {
+        color: '#7c7d7e',
+        borderColor: '#7c7d7e',
+    }),
+}));
 
 export const Divider = styled.hr({
     width: 'calc(100% - 16px)',

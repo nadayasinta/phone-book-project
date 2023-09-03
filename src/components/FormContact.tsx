@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState, ChangeEventHandler, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEventHandler, ChangeEvent, useEffect, useMemo } from 'react';
 import { CancelIcon, ErrorIcon } from '../icons';
 import {
     Container as ContainerComponent,
@@ -84,6 +84,10 @@ const FormContact = (props: Props) => {
             },
         },
     });
+
+    const disabledSaveButton: boolean = useMemo(() => {
+        return !(values.first_name && values.last_name && values.phones.every(phone => phone.number))
+    }, [values])
 
     useEffect(() => {
         if (intialValues) {
@@ -201,7 +205,7 @@ const FormContact = (props: Props) => {
                 </ErrorRow>
                 <ActionRow>
                     <Button onClick={() => navigate(-1)}>Cancel</Button>
-                    <Button onClick={handleSaveButton}>Save</Button>
+                    <Button onClick={handleSaveButton} disabled={disabledSaveButton}>Save</Button>
                 </ActionRow>
             </Container>
         </>
