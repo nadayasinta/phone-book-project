@@ -95,9 +95,9 @@ const FormContact = (props: Props) => {
     useEffect(() => {
         if (intialValues) {
             setValues({
-                first_name: intialValues?.first_name,
-                last_name: intialValues?.last_name,
-                phones: [...intialValues?.phones],
+                first_name: intialValues.first_name,
+                last_name: intialValues.last_name,
+                phones: [...intialValues.phones],
             });
         }
     }, [intialValues]);

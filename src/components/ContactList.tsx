@@ -16,7 +16,6 @@ const Container = styled.div({
         flexGrow: 1,
         width: '100%',
     },
-    ' svg': { margin: 'auto' },
     '.card': {
         flexGrow: 1,
         width: '100%',
@@ -29,6 +28,11 @@ const Container = styled.div({
             maxWidth: 'calc((100% - 16px)/3)',
         },
     },
+});
+
+const LoadingContainer = styled.div({
+    flexGrow: 1,
+    textAlign: 'center',
 });
 
 interface Props {
@@ -52,15 +56,20 @@ const ContactListComponent = (props: Props) => {
         ...cardAction
     } = props;
     return (
-        <Container>
+        <Container aria-label={`${type}-container`}>
             {type === 'favorite' && (
                 <SectionTitle className='text'>&#9733; Favorite</SectionTitle>
             )}
-            {loading ? (
-                <Loading />
-            ) : !contactList || !contactList.length ? (
+            {loading && (
+                <LoadingContainer aria-label='loading'>
+                    <Loading />
+                </LoadingContainer>
+            )}
+            {!loading && !contactList?.length && (
                 <Text className='text disabled center'>{emptyMessage}</Text>
-            ) : (
+            )}
+            {!loading &&
+                !!contactList?.length &&
                 contactList.map((contact: any) => (
                     <Card
                         key={contact.id}
@@ -68,8 +77,7 @@ const ContactListComponent = (props: Props) => {
                         isFavorite={contact.id === favoriteContactId}
                         {...cardAction}
                     />
-                ))
-            )}
+                ))}
         </Container>
     );
 };

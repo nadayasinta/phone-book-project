@@ -78,7 +78,7 @@ const ContactCardComponent = (props: Props) => {
     };
 
     return (
-        <Card onClick={toggleDetails} className='card'>
+        <Card onClick={toggleDetails} className='card' aria-label='card'>
             <CardTitle>
                 <Avatar
                     src={`https://api.dicebear.com/7.x/micah/svg?seed=${data.last_name}&radius=50&backgroundType=gradientLinear,solid&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`}

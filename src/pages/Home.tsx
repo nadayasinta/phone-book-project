@@ -45,10 +45,18 @@ const Home = () => {
         };
     }, [page, favoriteId, searchValue]);
 
-    const { data: contactList, loading: loadingContactList } =
-        useQuery<GetContacts>(GET_CONTACTS, { variables: contactListVariable });
-    const { data: favoriteContact, loading: loadingFavoriteContact } =
-        useQuery<GetContacts>(GET_CONTACTS, { variables: { where: { id: { _eq: favoriteId } } } });
+    const {
+        data: contactList,
+        loading: loadingContactList,
+        error: errorContactList,
+    } = useQuery<GetContacts>(GET_CONTACTS, { variables: contactListVariable });
+    const {
+        data: favoriteContact,
+        loading: loadingFavoriteContact,
+        error: errorFavoriteContact,
+    } = useQuery<GetContacts>(GET_CONTACTS, {
+        variables: { where: { id: { _eq: favoriteId } } },
+    });
     const { data: totalContact } = useQuery<GetCountContact>(GET_TOTAL_CONTACT);
     const [deleteContact] = useMutation(DELETE_CONTACT, {
         refetchQueries: [GET_CONTACTS, GET_TOTAL_CONTACT],
@@ -83,7 +91,11 @@ const Home = () => {
                 <>
                     <ContactList
                         type='favorite'
-                        emptyMessage='Your favorite list is empty'
+                        emptyMessage={
+                            errorFavoriteContact
+                                ? 'Something went wrong. Please try again later.'
+                                : 'Your favorite list is empty'
+                        }
                         loading={loadingContactList}
                         contactList={favoriteContact?.contact}
                         favoriteContactId={favoriteId}
@@ -96,7 +108,11 @@ const Home = () => {
             )}
             <ContactList
                 type='list'
-                emptyMessage='Your contact list is empty'
+                emptyMessage={
+                    errorContactList
+                        ? 'Something went wrong. Please try again later.'
+                        : 'Your contact list is empty'
+                }
                 loading={loadingFavoriteContact}
                 contactList={contactList?.contact}
                 favoriteContactId={favoriteId}

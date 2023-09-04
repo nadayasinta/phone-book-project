@@ -41,11 +41,12 @@ interface Props {
 const PaginationComponent = (props: Props) => {
     const { currentPage, firstPage, lastPage, setPage } = props;
     return (
-        <PaginationContainer>
+        <PaginationContainer aria-label='pagination'>
             <Pagination>
                 <NavigationButton
                     disabled={currentPage === firstPage}
                     onClick={() => setPage((val) => val - 1)}
+                    aria-label='prev-page'
                 >
                     <BackIcon />
                 </NavigationButton>
@@ -53,6 +54,7 @@ const PaginationComponent = (props: Props) => {
                 <NavigationButton
                     disabled={currentPage === lastPage}
                     onClick={() => setPage((val) => val + 1)}
+                    aria-label='next-page'
                 >
                     <NextIcon />
                 </NavigationButton>
