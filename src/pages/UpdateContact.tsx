@@ -1,8 +1,7 @@
-import { Phones, ContactForm } from '../types';
+import { Phones, ContactForm, GetContact } from '../types';
 import FormContact from '../components/FormContact';
 import { PUT_CONTACT } from '../graphql/mutation';
 import { useNavigate, useParams } from 'react-router-dom';
-import { GetContact } from '../types';
 import { GET_CONTACT, GET_CONTACTS } from '../graphql/query';
 import { useQuery, useMutation } from '@apollo/client';
 

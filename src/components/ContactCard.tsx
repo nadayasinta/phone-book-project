@@ -39,22 +39,20 @@ const CardDetail = styled.div((props) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     height: '100%',
-    borderWidth: 0,
-    borderStyle: 'solid',
-    borderColor: 'rgba(0, 0, 0, 0.2)',
-    borderTop: 'thin',
 }));
 
 const CardDescription = styled.div({
     display: 'flex',
     flexDirection: 'column',
     gap: '8px',
+    borderTop: 'thin solid rgba(0, 0, 0, 0.2)',
+    padding: '16px 9px',
 });
 
 const CardAction = styled.div({
     display: 'flex',
     justifyContent: 'space-around',
-    marginTop: '32px',
+    marginTop: '16px',
 });
 
 interface Props {

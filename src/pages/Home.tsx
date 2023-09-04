@@ -2,8 +2,8 @@ import Headers from '../components/HeaderHome';
 import Pagination from '../components/Pagination';
 import ContactList from '../components/ContactList';
 import { useQuery, useMutation } from '@apollo/client';
-import { GetContacts, GetContact, GetCountContact } from '../types';
-import { GET_CONTACTS, GET_CONTACT, GET_TOTAL_CONTACT } from '../graphql/query';
+import { GetContacts, GetCountContact } from '../types';
+import { GET_CONTACTS, GET_TOTAL_CONTACT } from '../graphql/query';
 import { DELETE_CONTACT } from '../graphql/mutation';
 import { useMemo } from 'react';
 import { Divider } from '../elements';
@@ -48,7 +48,7 @@ const Home = () => {
     const { data: contactList, loading: loadingContactList } =
         useQuery<GetContacts>(GET_CONTACTS, { variables: contactListVariable });
     const { data: favoriteContact, loading: loadingFavoriteContact } =
-        useQuery<GetContact>(GET_CONTACT, { variables: { id: favoriteId } });
+        useQuery<GetContacts>(GET_CONTACTS, { variables: { where: { id: { _eq: favoriteId } } } });
     const { data: totalContact } = useQuery<GetCountContact>(GET_TOTAL_CONTACT);
     const [deleteContact] = useMutation(DELETE_CONTACT, {
         refetchQueries: [GET_CONTACTS, GET_TOTAL_CONTACT],
@@ -85,11 +85,7 @@ const Home = () => {
                         type='favorite'
                         emptyMessage='Your favorite list is empty'
                         loading={loadingContactList}
-                        contactList={
-                            favoriteContact?.contact_by_pk
-                                ? [favoriteContact?.contact_by_pk]
-                                : []
-                        }
+                        contactList={favoriteContact?.contact}
                         favoriteContactId={favoriteId}
                         handleFavoriteButton={handleFavoriteButton}
                         handleEditButton={handleEditButton}
