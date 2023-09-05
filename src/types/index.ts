@@ -35,3 +35,21 @@ export interface GetCountContact {
         };
     };
 }
+
+export interface PostContact {
+    insert_contact: Contact[];
+}
+
+export interface PutContact {
+    update_contact_by_pk: Contact;
+    insert_phone: Phones[];
+    delete_phone: Phones[];
+}
+
+export interface DeleteContact {
+    delete_contact_by_pk: {
+        id: number;
+        first_name: string;
+        last_name: string;
+    };
+}

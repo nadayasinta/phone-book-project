@@ -2,7 +2,7 @@ import Headers from '../components/HeaderHome';
 import Pagination from '../components/Pagination';
 import ContactList from '../components/ContactList';
 import { useQuery, useMutation } from '@apollo/client';
-import { GetContacts, GetCountContact } from '../types';
+import { GetContacts, GetCountContact, DeleteContact } from '../types';
 import { GET_CONTACTS, GET_TOTAL_CONTACT } from '../graphql/query';
 import { DELETE_CONTACT } from '../graphql/mutation';
 import { useMemo } from 'react';
@@ -61,8 +61,12 @@ const Home = () => {
         GET_TOTAL_CONTACT,
         { variables: { where: { id: { _neq: favoriteId } } } }
     );
-    const [deleteContact] = useMutation(DELETE_CONTACT, {
+    const [deleteContact] = useMutation<DeleteContact>(DELETE_CONTACT, {
         refetchQueries: [GET_CONTACTS, GET_TOTAL_CONTACT],
+        onCompleted: (data) =>
+            setFavoriteId((val) =>
+                val === data.delete_contact_by_pk.id ? 0 : val
+            ),
     });
 
     const lastPage: number = useMemo(() => {

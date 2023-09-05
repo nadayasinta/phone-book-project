@@ -1,4 +1,4 @@
-import { ContactForm } from '../types';
+import { ContactForm, PostContact } from '../types';
 import FormContact from '../components/FormContact';
 import { useMutation } from '@apollo/client';
 import { POST_CONTACT } from '../graphql/mutation';
@@ -7,7 +7,7 @@ import { GET_TOTAL_CONTACT, GET_CONTACTS } from '../graphql/query';
 
 const CreateContact = () => {
     const navigate = useNavigate();
-    const [postContact] = useMutation(POST_CONTACT, {
+    const [postContact] = useMutation<PostContact>(POST_CONTACT, {
         refetchQueries: [GET_CONTACTS, GET_TOTAL_CONTACT],
         onCompleted: () => navigate(-1),
     });

@@ -1,4 +1,4 @@
-import { Phones, ContactForm, GetContact } from '../types';
+import { Phones, ContactForm, GetContact, PutContact } from '../types';
 import FormContact from '../components/FormContact';
 import { PUT_CONTACT } from '../graphql/mutation';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,7 +11,7 @@ const UpdateContact = () => {
     const { data, loading } = useQuery<GetContact>(GET_CONTACT, {
         variables: { id: id && parseInt(id) ? parseInt(id) : 0 },
     });
-    const [putContact] = useMutation(PUT_CONTACT, {
+    const [putContact] = useMutation<PutContact>(PUT_CONTACT, {
         refetchQueries: [GET_CONTACTS],
         onCompleted: () => navigate(-1),
     });
