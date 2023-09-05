@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Contact } from '../types';
 import { SectionTitle, Text } from '../elements';
-import { Loading } from '../icons';
+import Loading from '../components/Loading';
 import Card from '../components/ContactCard';
 
 const Container = styled.div({
@@ -30,11 +30,6 @@ const Container = styled.div({
     },
 });
 
-const LoadingContainer = styled.div({
-    flexGrow: 1,
-    textAlign: 'center',
-});
-
 interface Props {
     type: 'favorite' | 'list';
     emptyMessage: string;
@@ -60,11 +55,7 @@ const ContactListComponent = (props: Props) => {
             {type === 'favorite' && (
                 <SectionTitle className='text'>&#9733; Favorite</SectionTitle>
             )}
-            {loading && (
-                <LoadingContainer aria-label='loading'>
-                    <Loading />
-                </LoadingContainer>
-            )}
+            {loading && <Loading />}
             {!loading && !contactList?.length && (
                 <Text className='text disabled center'>{emptyMessage}</Text>
             )}

@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Home from './pages/Home';
-import CreateContact from './pages/CreateContact';
-import UpdateContact from './pages/UpdateContact';
+import { lazy, Suspense } from 'react';
+import Loading from './components/Loading';
 import { ApolloProvider } from '@apollo/client';
 import client from './graphql/client';
 import styled from '@emotion/styled';
@@ -16,18 +15,34 @@ const Page = styled.div({
   },
 });
 
+const Home = lazy(() => import('./pages/Home'));
+const CreateContact = lazy(() => import('./pages/CreateContact'));
+const UpdateContact = lazy(() => import('./pages/UpdateContact'));
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Home />
+      </Suspense>
+    ),
   },
   {
     path: '/create',
-    element: <CreateContact />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <CreateContact />{' '}
+      </Suspense>
+    ),
   },
   {
     path: '/update/:id',
-    element: <UpdateContact />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <UpdateContact />{' '}
+      </Suspense>
+    ),
   },
 ]);
 

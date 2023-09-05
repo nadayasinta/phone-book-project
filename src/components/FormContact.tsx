@@ -6,13 +6,14 @@ import {
     useEffect,
     useMemo,
 } from 'react';
-import { CancelIcon, ErrorIcon, Loading } from '../icons';
+import { CancelIcon, ErrorIcon } from '../icons';
 import { Text, Avatar, Input, Button, ButtonIcon, Title } from '../elements';
 import { ContactForm, Contact, GetCountContact } from '../types';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { GET_EXISTS_CONTACT } from '../graphql/query';
+import Loading from '../components/Loading';
 
 const Container = styled.div({
     padding: '16px',
@@ -58,10 +59,6 @@ const ErrorRow = styled.div({
     gap: '8px',
     marginTop: '40px',
     ' svg': { color: '#7A0404', fontSize: '32px', minWidth: '32px' },
-});
-
-const LoadingContainer = styled.div({
-    textAlign: 'center',
 });
 
 interface Props {
@@ -168,9 +165,7 @@ const FormContact = (props: Props) => {
                 </Title>
             </Header>
             {loading ? (
-                <LoadingContainer>
-                    <Loading />
-                </LoadingContainer>
+                <Loading />
             ) : (
                 <Container>
                     <Avatar
