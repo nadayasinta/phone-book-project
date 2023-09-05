@@ -43,8 +43,8 @@ export const GET_CONTACT = gql`
 `;
 
 export const GET_TOTAL_CONTACT = gql`
-    query GetTotalContact {
-        contact_aggregate {
+    query GetTotalContact($where: contact_bool_exp) {
+        contact_aggregate(where: $where) {
             aggregate {
                 count
             }

@@ -61,10 +61,10 @@ const HeaderComponent = (props: Props) => {
                 <>
                     <Title>Conntacts</Title>
                     <Action>
-                        <ButtonIcon onClick={toggleSearch}>
+                        <ButtonIcon onClick={toggleSearch} aria-label='search-button'>
                             <SearchIcon />
                         </ButtonIcon>
-                        <ButtonIcon onClick={handleAddButton}>
+                        <ButtonIcon onClick={handleAddButton} aria-label='add-button'>
                             <AddIcon />
                         </ButtonIcon>
                     </Action>
@@ -79,7 +79,7 @@ const HeaderComponent = (props: Props) => {
                             }`}
                         onChange={handleChangeSearch}
                     />
-                    <ButtonIcon onClick={toggleSearch}>
+                    <ButtonIcon onClick={toggleSearch} aria-label='cancel-button'>
                         <CancelIcon />
                     </ButtonIcon>
                 </>

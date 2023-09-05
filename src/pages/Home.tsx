@@ -57,7 +57,10 @@ const Home = () => {
     } = useQuery<GetContacts>(GET_CONTACTS, {
         variables: { where: { id: { _eq: favoriteId } } },
     });
-    const { data: totalContact } = useQuery<GetCountContact>(GET_TOTAL_CONTACT);
+    const { data: totalContact } = useQuery<GetCountContact>(
+        GET_TOTAL_CONTACT,
+        { variables: { where: { id: { _neq: favoriteId } } } }
+    );
     const [deleteContact] = useMutation(DELETE_CONTACT, {
         refetchQueries: [GET_CONTACTS, GET_TOTAL_CONTACT],
     });

@@ -99,18 +99,21 @@ const ContactCardComponent = (props: Props) => {
                     <ButtonIcon
                         className='border'
                         onClick={() => handleFavoriteButton(data.id)}
+                        aria-label='favorite-button'
                     >
                         {isFavorite ? <FilledStarIcon /> : <OutlineStarIcon />}
                     </ButtonIcon>
                     <ButtonIcon
                         className='border'
                         onClick={() => handleEditButton(data.id)}
+                        aria-label='edit-button'
                     >
                         <EditIcon />
                     </ButtonIcon>
                     <ButtonIcon
                         className='border'
                         onClick={() => handleDeleteButton(data.id)}
+                        aria-label='delete-button'
                     >
                         <DeleteIcon />
                     </ButtonIcon>
